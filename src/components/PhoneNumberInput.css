@@ -1,0 +1,93 @@
+/* Phone Input Custom Styles */
+.phone-input-custom {
+  position: relative;
+  width: 100%;
+}
+
+.phone-input-custom .PhoneInput {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  height: 2.5rem;
+  box-sizing: border-box;
+}
+
+.phone-input-custom .PhoneInput:focus-within {
+  border-color: #ec4899;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+}
+
+.phone-input-custom.error .PhoneInput {
+  border-color: #ef4444;
+}
+
+.phone-input-custom.error .PhoneInput:focus-within {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.phone-input-custom .PhoneInputInput {
+  width: 100% !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  color: #111827 !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  outline: none !important;
+  margin-left: 0.5rem !important;
+  flex: 1 !important;
+}
+
+.phone-input-custom .PhoneInputInput::placeholder {
+  color: #9ca3af !important;
+  font-size: 0.875rem !important;
+}
+
+.phone-input-custom .PhoneInputCountrySelect {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.phone-input-custom .PhoneInputCountrySelectArrow {
+  width: 0.75rem !important;
+  height: 0.75rem !important;
+  color: #6b7280 !important;
+  margin-left: 0.25rem !important;
+}
+
+.phone-input-custom .PhoneInputCountryFlag {
+  width: 1.2em !important;
+  height: 1.2em !important;
+  border-radius: 4px !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.phone-input-custom .PhoneInputCountryIcon {
+  width: 1.2em !important;
+  height: 1.2em !important;
+}
+
+/* Hide the default country select button styling */
+.phone-input-custom .PhoneInputCountrySelect button {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  cursor: pointer !important;
+}

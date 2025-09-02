@@ -10,9 +10,3 @@
   }
 }
 
-@layer components {
-  .gradient-bg {
-    background: linear-gradient(180deg, #fce7f3 0%, #fdf2f8 100%);
-  }
-}
-
