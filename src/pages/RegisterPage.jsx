@@ -38,7 +38,7 @@ const RegisterPage = ({ onNavigate }) => {
           {/* Profile Icon */}
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="w-20 h-20 bg-white rounded-full border-2 border-pink-200 flex items-center justify-center shadow-lg">
+              <div className="w-20 h-20 bg-black rounded-full border-2 border-pink-200 flex items-center justify-center shadow-lg">
                 <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-2xl">C</span>
                 </div>
@@ -148,3 +148,4 @@ const RegisterPage = ({ onNavigate }) => {
 };
 
 export default RegisterPage;
+
