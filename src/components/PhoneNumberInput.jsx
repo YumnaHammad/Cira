@@ -298,7 +298,7 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
     return formatted;
   };
 
-  // Handle phone number change
+  // Handle phone number change with digit limiting
   const handlePhoneChange = (phoneValue) => {
     if (!phoneValue) {
       setFormattedValue('');
@@ -318,12 +318,11 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
           return; // Don't update if exceeds limit
         }
         
-        // Format the number
+        // Format the number with dashes
         const formatted = formatPhoneNumber(nationalNumber, countryCode);
-        const fullFormatted = phoneNumber.countryCallingCode + ' ' + formatted;
         
-        setFormattedValue(fullFormatted);
-        onChange(phoneValue); // Keep original for validation
+        setFormattedValue(phoneValue);
+        onChange(phoneValue);
       } else {
         setFormattedValue(phoneValue);
         onChange(phoneValue);
@@ -384,12 +383,46 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
             value={value?.replace(selectedCountry.dialCode, '') || ''}
             onChange={(e) => {
               const inputValue = e.target.value;
-              // If user types a number, prepend the country code
-              if (/^\d/.test(inputValue)) {
-                onChange(selectedCountry.dialCode + inputValue);
-              } else {
-                onChange(inputValue);
+              const digitsOnly = inputValue.replace(/\D/g, '');
+              const countryInfo = getCountryInfo(selectedCountry.code);
+              
+              // Limit digits based on country
+              if (digitsOnly.length > countryInfo.digits) {
+                return; // Don't allow more digits than country limit
               }
+              
+              // Format with dashes as user types
+              let formatted = digitsOnly;
+              if (selectedCountry.code === 'PK') {
+                // Pakistan: XXX-XXXXXXX
+                if (digitsOnly.length > 3) {
+                  formatted = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
+                }
+              } else if (selectedCountry.code === 'US' || selectedCountry.code === 'CA') {
+                // US/Canada: XXX-XXX-XXXX
+                if (digitsOnly.length > 6) {
+                  formatted = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3, 6) + '-' + digitsOnly.slice(6);
+                } else if (digitsOnly.length > 3) {
+                  formatted = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
+                }
+              } else if (selectedCountry.code === 'GB') {
+                // UK: XXXX XXX XXX
+                if (digitsOnly.length > 4) {
+                  formatted = digitsOnly.slice(0, 4) + ' ' + digitsOnly.slice(4, 7) + ' ' + digitsOnly.slice(7);
+                } else if (digitsOnly.length > 4) {
+                  formatted = digitsOnly.slice(0, 4) + ' ' + digitsOnly.slice(4);
+                }
+              } else {
+                // Default formatting with dashes
+                if (digitsOnly.length > 6) {
+                  formatted = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3, 6) + '-' + digitsOnly.slice(6);
+                } else if (digitsOnly.length > 3) {
+                  formatted = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
+                }
+              }
+              
+              // Update with country code + formatted number
+              onChange(selectedCountry.dialCode + formatted);
             }}
             placeholder={placeholder}
             className="flex-1 bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 placeholder:text-sm text-base"
