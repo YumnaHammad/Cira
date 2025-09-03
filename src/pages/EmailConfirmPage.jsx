@@ -5,7 +5,7 @@ import logo from '../assets/Logo.png';
 
 const EmailConfirmPage = () => {
   const navigate = useNavigate();
-  const [code, setCode] = useState(['1', '2', '5', '0']);
+  const [code, setCode] = useState(['', '', '', '']);
   const [countdown, setCountdown] = useState(10);
   const [canResend, setCanResend] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,17 +74,33 @@ const EmailConfirmPage = () => {
     setError('');
 
     try {
-      // Simulate API call
+      // Simulate API call to verify the code
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // For demo purposes, accept any 4-digit code
-      if (fullCode.length === 4) {
+      // Strong validation - only accept specific valid codes
+      // In production, this should be validated against your backend/database
+      const validCodes = ['1234', '5678', '9999', '0000']; // Add your valid codes here
+      
+      // TODO: Replace with real API call to verify code
+      // const response = await fetch('/api/verify-email-code', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email: userEmail, code: fullCode })
+      // });
+      // const result = await response.json();
+      
+      if (validCodes.includes(fullCode)) {
+        // Code is valid - proceed to next step
         navigate('/enable-permission');
       } else {
-        setError('Invalid verification code. Please try again.');
+        // Code is invalid - show error and clear fields
+        setError('Invalid verification code. Please check your email and try again.');
+        setCode(['', '', '', '']); // Clear the input fields
+        inputRefs.current[0]?.focus(); // Focus first input
       }
     } catch (err) {
       setError('Verification failed. Please try again.');
+      setCode(['', '', '', '']); // Clear fields on error
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +110,7 @@ const EmailConfirmPage = () => {
   const handleResend = () => {
     setCountdown(10);
     setCanResend(false);
-    setCode(['1', '2', '5', '0']);
+    setCode(['', '', '', '']);
     setError('');
     inputRefs.current[0]?.focus();
     

@@ -62,11 +62,19 @@ const RegisterPage = () => {
       newErrors.username = 'Username can only contain letters, numbers, and underscores';
     }
 
-    // Email validation
+    // Email validation - Strong validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
+    } else {
+      // Additional email validation
+      const emailDomain = formData.email.split('@')[1];
+      const validDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+      
+      if (!validDomains.includes(emailDomain.toLowerCase())) {
+        newErrors.email = 'Please use a valid email provider (Gmail, Yahoo, Hotmail, Outlook, iCloud)';
+      }
     }
 
     // Phone validation
