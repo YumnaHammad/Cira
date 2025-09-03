@@ -10,3 +10,26 @@
   }
 }
 
+/* Global overrides for react-phone-number-input to remove black borders */
+.PhoneInput,
+.PhoneInput *,
+[class*="PhoneInput"],
+[class*="PhoneInput"] * {
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.PhoneInput input,
+.PhoneInput select,
+.PhoneInput button {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+

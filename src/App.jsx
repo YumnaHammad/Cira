@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import EmailConfirmPage from './pages/EmailConfirmPage';
+import EnablePermissionPage from './pages/EnablePermissionPage';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('login'); // 'login', 'register', or 'email-confirm'
+  const [currentPage, setCurrentPage] = useState('login'); // 'login', 'register', 'email-confirm', or 'enable-permission'
 
   const navigateToPage = (page) => {
     setCurrentPage(page);
@@ -15,8 +16,13 @@ function App() {
   };
 
   const handleEmailConfirmSuccess = () => {
+    // Navigate to enable permission page
+    setCurrentPage('enable-permission');
+  };
+
+  const handlePermissionSuccess = () => {
     // Navigate to dashboard or success page
-    alert('Email confirmed successfully! Welcome to Cira!');
+    alert('Permissions enabled successfully! Welcome to Cira!');
     setCurrentPage('login');
   };
 
@@ -26,10 +32,15 @@ function App() {
         <LoginPage onNavigate={navigateToPage} />
       ) : currentPage === 'register' ? (
         <RegisterPage onNavigate={navigateToPage} onRegistrationSuccess={handleRegistrationSuccess} />
-      ) : (
+      ) : currentPage === 'email-confirm' ? (
         <EmailConfirmPage 
           onBack={() => setCurrentPage('register')} 
           onContinue={handleEmailConfirmSuccess}
+        />
+      ) : (
+        <EnablePermissionPage
+          onBack={() => setCurrentPage('email-confirm')}
+          onContinue={handlePermissionSuccess}
         />
       )}
     </div>

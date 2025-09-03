@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import './PhoneNumberInput.css';
+import React, { useState, useEffect } from 'react';
+import PhoneInput from 'react-phone-number-input';
+import { parsePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
+import 'react-phone-number-input/style.css';
 
 const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number" }) => {
+  const [formattedValue, setFormattedValue] = useState(value);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState({
@@ -11,6 +14,45 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
     flag: '🇺🇸'
   });
 
+  // Country-specific digit limits and formatting
+  const getCountryInfo = (countryCode) => {
+    const countryLimits = {
+      'US': { digits: 10, format: 'XXX-XXX-XXXX' },
+      'CA': { digits: 10, format: 'XXX-XXX-XXXX' },
+      'GB': { digits: 10, format: 'XXXX XXX XXX' },
+      'AU': { digits: 9, format: 'XXXX XXX XXX' },
+      'DE': { digits: 11, format: 'XXX XXXXXXXX' },
+      'FR': { digits: 9, format: 'XX XX XX XX XX' },
+      'IT': { digits: 10, format: 'XXX XXX XXXX' },
+      'ES': { digits: 9, format: 'XXX XX XX XX' },
+      'PK': { digits: 10, format: 'XXX-XXXXXXX' }, // Pakistan
+      'IN': { digits: 10, format: 'XXXXX XXXXX' }, // India
+      'BD': { digits: 10, format: 'XXXX-XXXXXX' }, // Bangladesh
+      'CN': { digits: 11, format: 'XXX XXXX XXXX' }, // China
+      'JP': { digits: 10, format: 'XX-XXXX-XXXX' }, // Japan
+      'KR': { digits: 10, format: 'XXX-XXXX-XXXX' }, // South Korea
+      'BR': { digits: 10, format: 'XX XXXXX-XXXX' }, // Brazil
+      'MX': { digits: 10, format: 'XXX XXX XXXX' }, // Mexico
+      'RU': { digits: 10, format: 'XXX XXX-XX-XX' }, // Russia
+      'SA': { digits: 9, format: 'XXX XXX XXX' }, // Saudi Arabia
+      'AE': { digits: 9, format: 'XX XXX XXXX' }, // UAE
+      'EG': { digits: 10, format: 'XXX XXX XXXX' }, // Egypt
+      'ZA': { digits: 9, format: 'XX XXX XXXX' }, // South Africa
+      'NG': { digits: 10, format: 'XXX XXX XXXX' }, // Nigeria
+      'KE': { digits: 9, format: 'XXX XXX XXX' }, // Kenya
+      'TR': { digits: 10, format: 'XXX XXX XX XX' }, // Turkey
+      'IR': { digits: 10, format: 'XXX XXX XXXX' }, // Iran
+      'IQ': { digits: 10, format: 'XXX XXX XXXX' }, // Iraq
+      'JO': { digits: 9, format: 'XX XXX XXXX' }, // Jordan
+      'LB': { digits: 8, format: 'XX XXX XXX' }, // Lebanon
+      'SY': { digits: 9, format: 'XXX XXX XXX' }, // Syria
+      'IL': { digits: 9, format: 'XX-XXX-XXXX' }, // Israel
+      'PS': { digits: 9, format: 'XX XXX XXXX' }, // Palestine
+    };
+    return countryLimits[countryCode] || { digits: 10, format: 'XXX XXX XXXX' };
+  };
+
+  // Comprehensive country list with flags
   const countries = [
     { code: 'US', name: 'United States', dialCode: '+1', flag: '🇺🇸' },
     { code: 'CA', name: 'Canada', dialCode: '+1', flag: '🇨🇦' },
@@ -140,7 +182,6 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
     { code: 'FM', name: 'Micronesia', dialCode: '+691', flag: '🇫🇲' },
     { code: 'MH', name: 'Marshall Islands', dialCode: '+692', flag: '🇲🇭' },
     { code: 'NZ', name: 'New Zealand', dialCode: '+64', flag: '🇳🇿' },
-    { code: 'AU', name: 'Australia', dialCode: '+61', flag: '🇦🇺' },
     { code: 'ZA', name: 'South Africa', dialCode: '+27', flag: '🇿🇦' },
     { code: 'EG', name: 'Egypt', dialCode: '+20', flag: '🇪🇬' },
     { code: 'LY', name: 'Libya', dialCode: '+218', flag: '🇱🇾' },
@@ -220,6 +261,80 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
     country.dialCode.includes(searchTerm)
   );
 
+  // Format phone number based on country
+  const formatPhoneNumber = (phoneNumber, countryCode) => {
+    if (!phoneNumber || !countryCode) return phoneNumber;
+    
+    const countryInfo = getCountryInfo(countryCode);
+    const digits = phoneNumber.replace(/\D/g, '');
+    
+    if (digits.length > countryInfo.digits) {
+      return phoneNumber.slice(0, phoneNumber.length - 1); // Prevent extra digits
+    }
+    
+    // Apply formatting based on country
+    let formatted = digits;
+    if (countryCode === 'PK') {
+      // Pakistan: +92 XXX-XXXXXXX
+      if (digits.length > 3) {
+        formatted = digits.slice(0, 3) + '-' + digits.slice(3);
+      }
+    } else if (countryCode === 'US' || countryCode === 'CA') {
+      // US/Canada: XXX-XXX-XXXX
+      if (digits.length > 6) {
+        formatted = digits.slice(0, 3) + '-' + digits.slice(3, 6) + '-' + digits.slice(6);
+      } else if (digits.length > 3) {
+        formatted = digits.slice(0, 3) + '-' + digits.slice(3);
+      }
+    } else if (countryCode === 'GB') {
+      // UK: XXXX XXX XXX
+      if (digits.length > 4) {
+        formatted = digits.slice(0, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
+      } else if (digits.length > 4) {
+        formatted = digits.slice(0, 4) + ' ' + digits.slice(4);
+      }
+    }
+    
+    return formatted;
+  };
+
+  // Handle phone number change
+  const handlePhoneChange = (phoneValue) => {
+    if (!phoneValue) {
+      setFormattedValue('');
+      onChange('');
+      return;
+    }
+
+    try {
+      const phoneNumber = parsePhoneNumber(phoneValue);
+      if (phoneNumber) {
+        const countryCode = phoneNumber.country;
+        const nationalNumber = phoneNumber.nationalNumber;
+        const countryInfo = getCountryInfo(countryCode);
+        
+        // Check if number exceeds country limit
+        if (nationalNumber.length > countryInfo.digits) {
+          return; // Don't update if exceeds limit
+        }
+        
+        // Format the number
+        const formatted = formatPhoneNumber(nationalNumber, countryCode);
+        const fullFormatted = phoneNumber.countryCallingCode + ' ' + formatted;
+        
+        setFormattedValue(fullFormatted);
+        onChange(phoneValue); // Keep original for validation
+      } else {
+        setFormattedValue(phoneValue);
+        onChange(phoneValue);
+      }
+    } catch (error) {
+      setFormattedValue(phoneValue);
+      onChange(phoneValue);
+    }
+  };
+
+  // Handle country selection
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setShowModal(false);
@@ -233,44 +348,56 @@ const PhoneNumberInput = ({ value, onChange, error, placeholder = "Phone Number"
     }
   };
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    // If user types a number, prepend the country code
-    if (/^\d/.test(inputValue)) {
-      onChange(selectedCountry.dialCode + inputValue);
-    } else {
-      onChange(inputValue);
+  // Update formatted value when value prop changes
+  useEffect(() => {
+    if (value !== formattedValue) {
+      setFormattedValue(value);
     }
-  };
+  }, [value]);
 
   return (
     <div className="relative">
-      {/* Phone Input Field */}
-      <div className={`relative flex items-center bg-white border border-gray-200 rounded-3xl px-3 py-2 h-10 ${error ? 'border-red-500' : ''} focus-within:border-pink-500 focus-within:ring-2 focus-within:ring-pink-200`}>
-        {/* Country Selector Button */}
-        <button
-          type="button"
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <span className="text-lg">{selectedCountry.flag}</span>
-          <span className="text-gray-700 text-sm font-medium">{selectedCountry.dialCode}</span>
-          <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        {/* Phone Number Input */}
-        <input
-          type="tel"
-          value={value?.replace(selectedCountry.dialCode, '') || ''}
-          onChange={handleInputChange}
-          placeholder={placeholder}
-          className="flex-1 ml-2 bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 placeholder:text-sm text-base"
-        />
+      {/* Use exact same Tailwind classes as other input fields */}
+      <div className={`w-full pl-6 pr-3 py-2 rounded-3xl border bg-white text-gray-900 placeholder-gray-400 placeholder:text-sm text-base focus-within:outline-none focus-within:ring-2 focus-within:border-transparent transition-all duration-200 ${
+        error 
+          ? 'border-red-500 focus-within:ring-red-500' 
+          : 'border-white focus-within:ring-pink-500'
+      }`}>
+        {/* Custom phone input with country selector */}
+        <div className="flex items-center gap-2">
+          {/* Country Selector Button */}
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <span className="text-lg">{selectedCountry.flag}</span>
+            <span className="text-gray-700 text-sm font-medium">{selectedCountry.dialCode}</span>
+            <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          {/* Phone Number Input */}
+          <input
+            type="tel"
+            value={value?.replace(selectedCountry.dialCode, '') || ''}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              // If user types a number, prepend the country code
+              if (/^\d/.test(inputValue)) {
+                onChange(selectedCountry.dialCode + inputValue);
+              } else {
+                onChange(inputValue);
+              }
+            }}
+            placeholder={placeholder}
+            className="flex-1 bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 placeholder:text-sm text-base"
+          />
+        </div>
       </div>
 
-      {/* Country Selection Modal */}
+      {/* Custom Country Selection Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center">
           <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md h-[70vh] flex flex-col">

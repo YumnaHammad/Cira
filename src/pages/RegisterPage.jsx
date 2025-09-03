@@ -19,9 +19,10 @@ const RegisterPage = ({ onNavigate, onRegistrationSuccess }) => {
   const [bannerMessage, setBannerMessage] = useState('');
 
   const handleInputChange = (field) => (e) => {
+    const value = e.target ? e.target.value : e;
     setFormData(prev => ({
       ...prev,
-      [field]: e.target.value
+      [field]: value
     }));
     // Clear error when user starts typing
     if (errors[field]) {
@@ -66,8 +67,14 @@ const RegisterPage = ({ onNavigate, onRegistrationSuccess }) => {
     // Phone validation
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number';
+    } else {
+      // More comprehensive phone validation
+      const phoneDigits = formData.phone.replace(/\D/g, '');
+      if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+        newErrors.phone = 'Please enter a valid phone number';
+      } else if (!/^\+?[\d\s\-\(\)]{7,}$/.test(formData.phone)) {
+        newErrors.phone = 'Please enter a valid phone number format';
+      }
     }
 
     // Password validation
