@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Quote, Calendar, MapPin, Image, Check, X } from 'lucide-react';
 import LoginLogo from '../assets/LoginLogo.png';
 import logo from '../assets/Logo.png';
+import '../styles/banner.css';
 
-const EnablePermissionPage = ({ onBack, onContinue }) => {
+const EnablePermissionPage = () => {
+  const navigate = useNavigate();
+  const [showBanner, setShowBanner] = useState(false);
+  const [bannerMessage, setBannerMessage] = useState('');
+  const [bannerType, setBannerType] = useState('success');
+
   const handleEnablePermissions = () => {
     // Simulate enabling permissions
     console.log('Enabling permissions');
-    onContinue();
+    
+    // Show success banner
+    setBannerMessage('Permissions enabled successfully! Welcome to Cira!');
+    setBannerType('success');
+    setShowBanner(true);
+    
+    // Hide banner after 3 seconds and navigate
+    setTimeout(() => {
+      setShowBanner(false);
+      navigate('/plus-unlocked');
+    }, 3000);
   };
 
   const permissionCards = [
@@ -14,49 +32,54 @@ const EnablePermissionPage = ({ onBack, onContinue }) => {
       id: 'notification',
       title: 'Notification Access',
       description: 'Allow access to enhance functionality and improve experience',
-      icon: (
-        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-        </svg>
-      )
+      icon: <Quote className="w-4 h-4 text-white fill-current " />
     },
     {
       id: 'calendar',
       title: 'Calendar Access',
       description: 'Allow access to enhance functionality and improve experience',
-      icon: (
-        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-        </svg>
-      )
+      icon: <Calendar className="w-4 h-4 text-white stroke-[4]" />
     },
     {
       id: 'location',
       title: 'Location Access',
       description: 'Allow access to enhance functionality and improve experience',
-      icon: (
-        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
-      )
+      icon: <MapPin className="w-6 h-6 text-pink-500 stroke-[3.5]" />
     },
     {
       id: 'gallery',
       title: 'Gallery or File Access',
       description: 'Allow access to enhance functionality and improve experience',
-      icon: (
-        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-        </svg>
-      )
+      icon: <Image className="w-5 h-5 text-pink-500 stroke-[3]" />
     }
   ];
 
   return (
     <div 
-      className="min-h-screen flex flex-col px-6 py-8 overflow-hidden"
+      className="min-h-screen flex flex-col px-6 py-8 overflow-hidden relative"
       style={{ background: 'linear-gradient(180deg, #FFFBFD 0%, #FDE4F8 28%, #FFF7EA 100%)' }}
     >
+      {/* Success Banner */}
+      {showBanner && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className={`px-6 py-4 rounded-2xl shadow-lg border ${
+            bannerType === 'success' 
+              ? 'bg-green-500 text-white border-green-600' 
+              : 'bg-red-500 text-white border-red-600'
+          }`}>
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0">
+                {bannerType === 'success' ? (
+                  <Check className="w-5 h-5" />
+                ) : (
+                  <X className="w-5 h-5" />
+                )}
+              </div>
+              <p className="font-medium text-sm">{bannerMessage}</p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Header - Fixed at top */}
       <div className="w-full flex justify-between items-center mb-8">
         <div className="flex items-center pl-8">
@@ -66,7 +89,7 @@ const EnablePermissionPage = ({ onBack, onContinue }) => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="w-full max-w-md text-center">
+        <div className="w-full max-w-sm text-center">
           {/* Logo */}
           <div className="mb-6">
             <img 
@@ -87,23 +110,27 @@ const EnablePermissionPage = ({ onBack, onContinue }) => {
           </p>
 
           {/* Permission Cards */}
-          <div className="space-y-2 mb-8">
+          <div className="space-y-1 mb-8">
             {permissionCards.map((card) => (
               <div
                 key={card.id}
-                className={`${card.id === 'calendar' ? 'bg-transparent border-0' : 'bg-white/40 border border-gray-100'} rounded-2xl p-3 shadow-sm flex items-start gap-4`}
+                className="bg-white/40 border border-gray-100 rounded-2xl p-4 shadow-sm flex items-start gap-4 hover:bg-transparent transition-colors duration-200 cursor-pointer"
               >
                 {/* Icon */}
-                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  card.id === 'location' || card.id === 'gallery' 
+                    ? 'bg-transparent' 
+                    : 'bg-pink-500'
+                }`}>
                   {card.icon}
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 text-left">
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                <div className="flex-1 text-left ">
+                  <h3 className=" text-[17.5px] font-semibold text-gray-900 mb-1 select-none">
                     {card.title}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-sm text-gray-500 leading-relaxed select-none">
                     {card.description}
                   </p>
                 </div>

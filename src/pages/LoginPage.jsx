@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Eye, EyeClosed } from 'lucide-react';
 import logo from '../assets/Logo.png';
 import loginLogo from '../assets/LoginLogo.png';
 
 import '../styles/banner.css';
 
-const LoginPage = ({ onNavigate }) => {
+const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -15,6 +18,7 @@ const LoginPage = ({ onNavigate }) => {
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [showErrorBanner, setShowErrorBanner] = useState(false);
   const [bannerMessage, setBannerMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (field) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -190,18 +194,31 @@ const LoginPage = ({ onNavigate }) => {
             </div>
             
             {/* Password */}
-            <div className="relative">
-              <input
-                type="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange('password')}
-                className={`w-full pl-6 pr-3 py-2 rounded-3xl border bg-white text-gray-900 placeholder-gray-400 placeholder:text-sm text-base focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
-                  errors.password 
-                    ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-gray-200 focus:ring-pink-500'
-                }`}
-              />
+            <div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange('password')}
+                  className={`w-full pl-6 pr-12 py-2 rounded-3xl border bg-white text-gray-900 placeholder-gray-400 placeholder:text-sm text-base focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                    errors.password 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-200 focus:ring-pink-500'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200"
+                >
+                  {showPassword ? (
+                    <EyeClosed className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1 text-left">{errors.password}</p>
               )}
@@ -270,7 +287,7 @@ const LoginPage = ({ onNavigate }) => {
             <p className="text-gray-600 text-sm">
               Don't have an account?{' '}
               <button 
-                onClick={() => onNavigate('register')}
+                onClick={() => navigate('/register')}
                 className="text-blue-500 hover:text-blue-600 font-medium transition-colors duration-200"
               >
                 Create an Account

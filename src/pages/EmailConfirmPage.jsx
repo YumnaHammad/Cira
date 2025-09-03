@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginLogo from '../assets/LoginLogo.png';
 import logo from '../assets/Logo.png';
 
-const EmailConfirmPage = ({ onBack, onContinue }) => {
+const EmailConfirmPage = () => {
+  const navigate = useNavigate();
   const [code, setCode] = useState(['1', '2', '5', '0']);
   const [countdown, setCountdown] = useState(10);
   const [canResend, setCanResend] = useState(false);
@@ -77,7 +79,7 @@ const EmailConfirmPage = ({ onBack, onContinue }) => {
       
       // For demo purposes, accept any 4-digit code
       if (fullCode.length === 4) {
-        onContinue();
+        navigate('/enable-permission');
       } else {
         setError('Invalid verification code. Please try again.');
       }
