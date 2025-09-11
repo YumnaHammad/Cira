@@ -120,20 +120,21 @@ const EmailConfirmPage = () => {
 
   return (
     <div 
-      className="h-screen flex flex-col items-center justify-center px-6 py-4 overflow-hidden"
+      className="min-h-screen flex flex-col px-4 py-5 overflow-hidden relative"
       style={{ background: 'linear-gradient(180deg, #FFFBFD 0%, #FDE4F8 28%, #FFF7EA 100%)' }}
     >
-      {/* Header - Fixed at top */}
-      <div className="w-full flex justify-between items-center mb-4">
-        <div className="flex items-center pl-8">
-          <img src={logo} alt="Cira Logo" className="h-10 w-auto" />
-        </div>
-      </div>
+    {/* Header - Logo in center */}
+    <div className="w-full flex justify-start items-center mb-4">
+                <div className="flex items-center pl-4">
+                    <img src={logo} alt="Cira Logo" className="h-7 w-auto" />
+                </div>
+            </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-center w-full max-w-sm">
+      {/* Main Content - Centered */}
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="w-full max-w-sm text-center">
         {/* Logo */}
-        <div className="mb-3">
+        <div className="mb-3 flex justify-center items-center">
           <img 
             src={LoginLogo} 
             alt="Cira Logo" 
@@ -152,7 +153,7 @@ const EmailConfirmPage = () => {
         </p>
 
         {/* Code Input Fields */}
-        <div className="flex gap-3 mb-3">
+        <div className="flex gap-3 mb-3 justify-center">
           {code.map((digit, index) => (
             <input
               key={index}
@@ -178,7 +179,7 @@ const EmailConfirmPage = () => {
         )}
 
         {/* Resend Code */}
-        <div className="mb-20">
+        <div className="mb-20 text-center">
           {canResend ? (
             <button
               onClick={handleResend}
@@ -209,9 +210,10 @@ const EmailConfirmPage = () => {
                Verifying...
              </div>
            ) : (
-             'Countinue'
+             'Continue'
            )}
          </button>
+        </div>
       </div>
     </div>
   );

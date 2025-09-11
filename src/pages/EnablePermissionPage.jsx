@@ -56,7 +56,7 @@ const EnablePermissionPage = () => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col px-6 py-8 overflow-hidden relative"
+      className="min-h-screen flex flex-col px-4 py-5 overflow-hidden relative"
       style={{ background: 'linear-gradient(180deg, #FFFBFD 0%, #FDE4F8 28%, #FFF7EA 100%)' }}
     >
       {/* Success Banner */}
@@ -81,17 +81,17 @@ const EnablePermissionPage = () => {
         </div>
       )}
       {/* Header - Fixed at top */}
-      <div className="w-full flex justify-between items-center mb-8">
-        <div className="flex items-center pl-8">
-          <img src={logo} alt="Cira Logo" className="h-10 w-auto" />
-        </div>
-      </div>
+      <div className="w-full flex justify-start items-center mb-4">
+                <div className="flex items-center pl-4">
+                    <img src={logo} alt="Cira Logo" className="h-7 w-auto" />
+                </div>
+            </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="w-full max-w-sm text-center">
+        <div className="w-full text-center">
           {/* Logo */}
-          <div className="mb-6">
+          <div className="mb-1">
             <img 
               src={LoginLogo} 
               alt="Cira Logo" 
@@ -100,24 +100,24 @@ const EnablePermissionPage = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Enable Permission
           </h1>
 
           {/* Subtitle */}
-          <p className="text-gray-600 mb-6 leading-relaxed">
+          <p className="text-gray-600 mb-2 leading-relaxed">
             Allow access to enhance functionality and improve experience
           </p>
 
           {/* Permission Cards */}
-          <div className="space-y-1 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 mb-4 max-w-sm mx-auto">
             {permissionCards.map((card) => (
               <div
                 key={card.id}
-                className="bg-white/40 border border-gray-100 rounded-2xl p-4 shadow-sm flex items-start gap-4 hover:bg-transparent transition-colors duration-200 cursor-pointer"
+                className="bg-white/40 border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-col items-center text-center hover:bg-transparent transition-colors duration-200 cursor-pointer"
               >
                 {/* Icon */}
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mb-3 ${
                   card.id === 'location' || card.id === 'gallery' 
                     ? 'bg-transparent' 
                     : 'bg-pink-500'
@@ -126,11 +126,11 @@ const EnablePermissionPage = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 text-left ">
-                  <h3 className=" text-[17.5px] font-semibold text-gray-900 mb-1 select-none">
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1 select-none">
                     {card.title}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed select-none">
+                  <p className="text-xs text-gray-500 leading-relaxed select-none">
                     {card.description}
                   </p>
                 </div>
@@ -141,7 +141,7 @@ const EnablePermissionPage = () => {
           {/* Enable Permission Button */}
           <button
             onClick={handleEnablePermissions}
-            className="w-full py-3 bg-pink-500 text-white rounded-3xl font-semibold text-lg hover:bg-pink-600 active:bg-pink-700 transform active:scale-95 transition-all duration-200"
+            className="w-full max-w-sm mx-auto py-3 bg-pink-500 text-white rounded-3xl font-semibold text-lg hover:bg-pink-600 active:bg-pink-700 transform active:scale-95 transition-all duration-200"
           >
             Enable Permission
           </button>

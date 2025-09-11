@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../assets/Logo.png';
 import loginLogo from '../assets/LoginLogo.png';
 
-const SubscriptionPlansPage = () => {
+const 
+SubscriptionPlansPage = () => {
     const navigate = useNavigate();
 
     const handleUpgrade = () => {
@@ -37,21 +38,21 @@ const SubscriptionPlansPage = () => {
 
     return (
         <div
-            className="min-h-screen flex flex-col px-6 py-8 overflow-hidden relative"
+            className="min-h-screen flex flex-col px-4 py-5 overflow-hidden relative"
             style={{ background: 'linear-gradient(180deg, #FFFBFD 0%, #FDE4F8 28%, #FFF7EA 100%)' }}
         >
             {/* Header - Logo in top left */}
-            <div className="w-full flex justify-start items-center mb-4">
-                <div className="flex items-center pl-8">
-                    <img src={logo} alt="Cira Logo" className="h-10 w-auto" />
+            <div className="w-full flex justify-start items-center mb-2">
+                <div className="flex items-center pl-4">
+                    <img src={logo} alt="Cira Logo" className="h-7 w-auto" />
                 </div>
             </div>
 
             {/* Main Content - Centered */}
             <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="w-full max-w-sm text-center">
+                <div className="w-full max-w-6xl text-center">
                  {/* Main Logo */}
-                 <div className="flex justify-center mb-4">
+                 <div className="flex justify-center mb-1">
                         <img
                             src={loginLogo}
                             alt="Login Logo"
@@ -59,45 +60,111 @@ const SubscriptionPlansPage = () => {
                         />
                     </div>
                     {/* Main Title */}
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">
-                        Get Chatia Plus Subscriptions
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1 leading-tight">
+                        Choose Your Plan
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-gray-600 text-base mb-6 leading-relaxed">
-                        Allow access to enhance your experience and unlock all features.
+                    <p className="text-gray-600 text-base mb-2 leading-relaxed">
+                        Unlock premium features and enhance your Chatia experience
                     </p>
 
                                          {/* Subscription Plans */}
-                     <div className="space-y-2 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
                          {subscriptionPlans.map((plan) => (
                              <div
                                  key={plan.id}
-                                 className="bg-white rounded-3xl p-4  shadow-sm border border-gray-100 relative"
+                                className={`bg-white/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-2 relative transition-all duration-300 hover:shadow-xl hover:scale-[1.02] ${
+                                    plan.isPopular 
+                                        ? 'border-pink-300 ring-2 ring-pink-100' 
+                                        : 'border-gray-200 hover:border-pink-200'
+                                }`}
                              >
                                  {/* Popular Badge */}
                                  {plan.isPopular && (
-                                     <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                                         Popular
+                                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                                        ⭐ Most Popular
                                      </div>
                                  )}
                                  
-                                 <div className="text-left">
-                                     <h1 className="font-semibold text-gray-900 mb-2 text-xl">{plan.title}</h1>
-                                     <p className="text-gray-600 text-sm mb-3" style={{ lineHeight: '1.4' }}>{plan.description}</p>
-                                     <div className="text-pink-500 font-bold text-xl ">{plan.price}</div>
+                                <div className="text-center">
+                                    <h2 className="font-bold text-gray-900 mb-3 text-xl">{plan.title}</h2>
+                                    <div className="text-3xl font-bold text-pink-500 mb-4">{plan.price}</div>
+                                    <p className="text-gray-600 text-sm mb-4 leading-relaxed">{plan.description}</p>
+                                    
+                                    {/* Features for each plan */}
+                                    <div className="space-y-1 text-left">
+                                        {plan.id === 'basic' && (
+                                            <>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>100 messages/month</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Basic AI features</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Email support</span>
+                                                </div>
+                                            </>
+                                        )}
+                                        {plan.id === 'pro' && (
+                                            <>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>500 messages/month</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Advanced AI features</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Team collaboration</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Analytics dashboard</span>
+                                                </div>
+                                            </>
+                                        )}
+                                        {plan.id === 'enterprise' && (
+                                            <>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>1,000 messages/month</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>All AI features</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Priority support</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                                                    <span>Custom integrations</span>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
                                  </div>
                              </div>
                          ))}
                      </div>
 
                     {/* Upgrade Button */}
+                    <div className="w-full max-w-md mx-auto">
                     <button
                         onClick={handleUpgrade}
-                        className="w-full py-3 px-6 rounded-3xl font-bold text-lg bg-pink-500 text-white hover:bg-pink-600 active:bg-pink-700 transform active:scale-95 transition-all duration-200 shadow-lg"
+                            className="w-full py-4 px-6 rounded-3xl font-bold text-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 active:from-pink-700 active:to-pink-800 transform active:scale-95 transition-all duration-200 shadow-xl hover:shadow-2xl"
                     >
-                        Upgrade to Plus
+                            Start Your Journey
                     </button>
+                    </div>
                 </div>
             </div>
         </div>

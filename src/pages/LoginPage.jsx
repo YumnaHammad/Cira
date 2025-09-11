@@ -99,7 +99,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col px-4 py-8 overflow-hidden relative" style={{
+    <div className="min-h-screen flex flex-col px-4 py-5 overflow-hidden relative" style={{
       background: 'linear-gradient(180deg, #FFFBFD 0%, #FDE4F8 28%, #FFF7EA 100%)'
     }}>
       {/* Success Banner */}
@@ -150,11 +150,11 @@ const LoginPage = () => {
         </div>
       )}
       {/* Header - Fixed at top */}
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center pl-8">
-          <img src={logo} alt="Cira Logo" className="h-10 w-auto" />
-        </div>
-      </div>
+      <div className="w-full flex justify-start items-center mb-4">
+                <div className="flex items-center pl-4">
+                    <img src={logo} alt="Cira Logo" className="h-7 w-auto" />
+                </div>
+            </div>
 
       {/* Main Content - Centered */}
       <div className="flex-1 flex items-center justify-center">
